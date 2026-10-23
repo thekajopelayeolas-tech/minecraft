@@ -58,8 +58,8 @@ canvas {
 
 .slot .count {
   position: absolute;
-  top: 2px;
-  left: 4px;
+  bottom: 2px;
+  right: 4px;
   font-size: 9px;
 }
 
@@ -105,4 +105,135 @@ canvas {
 
 #menu.hidden {
   display: none;
+}
+
+/* Death screen */
+#death {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(120, 0, 0, 0.6);
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  z-index: 6;
+}
+
+#death.hidden {
+  display: none;
+}
+
+#death h1 {
+  font-size: 28px;
+  text-shadow: 3px 3px 0 #000;
+}
+
+#death p {
+  font-size: 12px;
+}
+
+/* Health hearts, above the hotbar */
+#health {
+  position: fixed;
+  bottom: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.heart {
+  font-size: 18px;
+  color: #c01010;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.heart.half {
+  color: #e05050;
+}
+
+.heart.empty {
+  color: #333;
+}
+
+/* Inventory screen */
+#inventory {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  margin: auto;
+  width: max-content;
+  height: max-content;
+  padding: 16px;
+  background: rgba(40, 40, 40, 0.95);
+  border: 3px solid #000;
+  color: #fff;
+  text-align: center;
+  font-size: 10px;
+}
+
+#inventory.hidden {
+  display: none;
+}
+
+#inventory h2 {
+  font-size: 14px;
+  margin: 0 0 10px;
+}
+
+.inv-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.craft-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 56px);
+  gap: 4px;
+}
+
+.inv-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 56px);
+  gap: 4px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.inv-grid.row {
+  margin-top: 10px;
+}
+
+#inventory .slot {
+  cursor: pointer;
+}
+
+#inventory .hint {
+  font-size: 8px;
+  color: #bbb;
+  margin: 10px 0 0;
+}
+
+.slot.floating {
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  border-width: 2px;
+}
+
+.slot .key {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 8px;
 }

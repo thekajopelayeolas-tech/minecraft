@@ -9,6 +9,8 @@ const FLY_SPEED = 10;
 const GRAVITY = 28;
 const JUMP_VELOCITY = 8.6;
 const TERMINAL = 55;
+const MAX_HEALTH = 20; // 10 hearts, as in Minecraft
+const SAFE_FALL = 3; // blocks; falls up to this distance do no damage
 
 export class Player {
   constructor(world) {
@@ -19,12 +21,41 @@ export class Player {
     this.flying = false;
     this.yaw = 0;
     this.pitch = 0;
+    this.health = MAX_HEALTH;
+    this.maxHealth = MAX_HEALTH;
+    this.fallStartY = null; // highest Y since last landing, for fall damage
+    this.spawnPoint = { x: 8, z: 8 };
+    this.dead = false;
   }
 
   spawn(x, z) {
+    this.spawnPoint = { x, z };
     const y = this.world.surfaceHeight(Math.floor(x), Math.floor(z)) + 1;
     this.pos = { x: x + 0.5, y: y + 0.01, z: z + 0.5 };
     this.vel = { x: 0, y: 0, z: 0 };
+    this.fallStartY = null;
+  }
+
+  // Restores health and returns to the spawn point after death.
+  respawn() {
+    this.health = this.maxHealth;
+    this.dead = false;
+    this.spawn(this.spawnPoint.x, this.spawnPoint.z);
+  }
+
+  damage(amount) {
+    if (this.dead || this.flying) return;
+    this.health = Math.max(0, this.health - amount);
+    if (this.health === 0) this.dead = true;
+  }
+
+  // Applies fall damage when the player lands after a drop larger than SAFE_FALL.
+  landed() {
+    if (this.fallStartY !== null) {
+      const dist = this.fallStartY - this.pos.y;
+      if (dist > SAFE_FALL) this.damage(Math.ceil(dist - SAFE_FALL));
+    }
+    this.fallStartY = null;
   }
 
   eyePosition() {
@@ -105,11 +136,20 @@ export class Player {
     this.moveAxis('x', this.vel.x * dt);
     this.moveAxis('z', this.vel.z * dt);
     const fallingBefore = this.vel.y <= 0;
+    // Track the highest point of a fall to measure damage on landing.
+    if (!this.onGround && !this.flying && this.fallStartY === null) this.fallStartY = this.pos.y;
     const hitY = this.moveAxis('y', this.vel.y * dt);
     // Only a downward collision counts as standing on ground.
-    if (hitY && fallingBefore && !this.flying) this.onGround = true;
+    if (hitY && fallingBefore && !this.flying) {
+      this.onGround = true;
+      this.landed();
+    }
+    if (this.flying) this.fallStartY = null;
 
-    // Fell out of the world: respawn above the surface.
-    if (this.pos.y < -20) this.spawn(this.pos.x, this.pos.z);
+    // Fell out of the world: respawn above the surface (and take void damage).
+    if (this.pos.y < -20) {
+      this.damage(MAX_HEALTH);
+      if (!this.dead) this.spawn(this.pos.x, this.pos.z);
+    }
   }
 }

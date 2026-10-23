@@ -9,8 +9,24 @@
   <body>
     <div id="app">
       <div id="crosshair">+</div>
+      <div id="health"></div>
       <div id="hotbar"></div>
       <div id="info"></div>
+      <div id="inventory" class="hidden">
+        <h2>Inventory</h2>
+        <div class="inv-row">
+          <div id="inv-craft" class="craft-grid"></div>
+          <div class="arrow">&rarr;</div>
+          <div id="inv-output"></div>
+        </div>
+        <div id="inv-main" class="inv-grid"></div>
+        <div id="inv-hotbar" class="inv-grid row"></div>
+        <p class="hint">E close · click to pick up/place · craft in the 2x2 grid</p>
+      </div>
+      <div id="death" class="hidden">
+        <h1>You died!</h1>
+        <p>Click to respawn</p>
+      </div>
       <div id="menu">
         <h1>Minecraft Web</h1>
         <p>Click to play</p>
