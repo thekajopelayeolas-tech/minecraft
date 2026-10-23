@@ -1,0 +1,108 @@
+html, body, #app {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: "Press Start 2P", monospace, sans-serif;
+  user-select: none;
+}
+
+canvas {
+  display: block;
+}
+
+#crosshair {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 24px;
+  text-shadow: 1px 1px 0 #000;
+  pointer-events: none;
+}
+
+#hotbar {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.slot {
+  width: 56px;
+  height: 56px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 3px solid #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 10px;
+  position: relative;
+}
+
+.slot.active {
+  border-color: #fff;
+}
+
+.slot .swatch {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.slot .count {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 9px;
+}
+
+#info {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1.6;
+  text-shadow: 1px 1px 0 #000;
+  pointer-events: none;
+  white-space: pre;
+}
+
+#menu {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+}
+
+#menu h1 {
+  font-size: 28px;
+  text-shadow: 3px 3px 0 #333;
+}
+
+#menu p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+#menu .controls {
+  font-size: 9px;
+  color: #ddd;
+}
+
+#menu.hidden {
+  display: none;
+}
