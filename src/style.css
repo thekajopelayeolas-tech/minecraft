@@ -107,6 +107,29 @@ canvas {
   display: none;
 }
 
+/* Name of the held item, above the hotbar */
+#held {
+  position: fixed;
+  bottom: 104px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 10px;
+  text-shadow: 1px 1px 0 #000;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Crafting result label and inventory contents list */
+#craft-label,
+#inv-contents {
+  font-size: 9px;
+  line-height: 1.6;
+  color: #eee;
+  margin: 6px 0;
+  max-width: 560px;
+}
+
 /* Death screen */
 #death {
   position: fixed;

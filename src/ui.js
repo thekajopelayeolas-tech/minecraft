@@ -15,7 +15,12 @@ function paint(el, stack, active = false) {
   el.classList.toggle('active', active);
   el.querySelector('.swatch').style.background = stack ? hex(BLOCKS[stack.id].top) : 'transparent';
   el.querySelector('.count').textContent = stack && stack.count > 1 ? String(stack.count) : '';
+  // Hovering a slot shows its item name and count.
+  el.title = stack ? `${BLOCKS[stack.id].name} x${stack.count}` : '';
 }
+
+// Readable name for an item id, used in labels.
+const itemName = (id) => (BLOCKS[id] ? BLOCKS[id].name : 'Unknown');
 
 export function createUI(inventory) {
   const hotbarEl = document.getElementById('hotbar');
@@ -25,6 +30,9 @@ export function createUI(inventory) {
   const rowEl = document.getElementById('inv-hotbar');
   const craftEl = document.getElementById('inv-craft');
   const outEl = document.getElementById('inv-output');
+  const heldEl = document.getElementById('held');
+  const contentsEl = document.getElementById('inv-contents');
+  const craftLabelEl = document.getElementById('craft-label');
 
   const craftGrid = [null, null, null, null];
   let cursor = null; // stack held by the mouse while the inventory is open
@@ -43,6 +51,21 @@ export function createUI(inventory) {
     craftSlots.forEach((el, i) => paint(el, craftGrid[i]));
     const recipe = matchRecipe(craftGrid);
     paint(outSlot, recipe ? recipe.output : null);
+    craftLabelEl.textContent = recipe
+      ? `Result: ${itemName(recipe.output.id)} x${recipe.output.count}`
+      : 'Put ingredients in the 2x2 grid';
+
+    // Name of the item in the selected hotbar slot, shown above the hotbar.
+    const held = inventory.get(selected);
+    heldEl.textContent = held ? `${itemName(held.id)} x${held.count}` : 'Empty hand';
+
+    // Plain-text list of everything in the inventory, with totals per item.
+    const totals = new Map();
+    for (const s of inventory.slots) if (s) totals.set(s.id, (totals.get(s.id) || 0) + s.count);
+    contentsEl.textContent = totals.size
+      ? [...totals].map(([id, n]) => `${itemName(id)} x${n}`).join(', ')
+      : 'Inventory is empty';
+
     if (cursor) {
       paint(cursorEl, cursor);
       cursorEl.style.display = 'block';
@@ -103,8 +126,13 @@ export function createUI(inventory) {
   outSlot.addEventListener('mousedown', () => {
     const recipe = matchRecipe(craftGrid);
     if (!recipe) return;
-    // Crafting only happens when the output fits and the held stack is compatible.
-    if (cursor && (cursor.id !== recipe.output.id || cursor.count + recipe.output.count > 64)) return;
+    // Put any stack held on the cursor back into the inventory first, so it
+    // never blocks the craft. If it cannot fit, leave everything as it is.
+    if (cursor) {
+      if (!inventory.canAdd(cursor.id, cursor.count)) return;
+      inventory.add(cursor.id, cursor.count);
+      cursor = null;
+    }
     if (craft(craftGrid, inventory)) refresh();
   });
   outEl.appendChild(outSlot);
