@@ -155,6 +155,11 @@ function setInventoryOpen(open) {
 }
 
 window.addEventListener('keydown', (e) => {
+  // Enter starts the game from the start menu (same as clicking it).
+  if (e.code === 'Enter' && !playing && !e.repeat) {
+    startPlaying();
+    return;
+  }
   if (e.code === 'KeyE' && !e.repeat && playing) {
     setInventoryOpen(!inventoryOpen);
     return;
