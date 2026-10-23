@@ -155,8 +155,9 @@ function setInventoryOpen(open) {
 }
 
 window.addEventListener('keydown', (e) => {
-  // Enter starts the game from the start menu (same as clicking it).
-  if (e.code === 'Enter' && !playing && !e.repeat) {
+  // Enter (or the numpad Enter) starts or resumes the game, same as clicking the menu.
+  if ((e.code === 'Enter' || e.code === 'NumpadEnter') && !playing && !e.repeat) {
+    e.preventDefault();
     startPlaying();
     return;
   }
